@@ -52,6 +52,8 @@ public class FacebookServlet extends HttpServlet {
 	}
 
 	private boolean validateParams(HttpServletRequest request) {
+		System.out.println(getAppKey(request));
+		System.out.println(getPost(request));
 		return getAppKey(request) != null && getPost(request) != null;
 	}
 
@@ -83,7 +85,10 @@ public class FacebookServlet extends HttpServlet {
 		cal.add(Calendar.SECOND, token.getTokenExpirationTime());
 
 		Date expirationDate = cal.getTime();
-		return expirationDate.before(now);
+		
+		boolean isValidDate = expirationDate.after(now);
+		System.out.println("Expiration time : '" + expirationDate + "' Current time '" + now + "' ValidToken?" + isValidDate);
+		return isValidDate;
 	}
 
 	private void postToFacebook(HttpServletRequest request,
@@ -91,7 +96,7 @@ public class FacebookServlet extends HttpServlet {
 		FacebookToken token = getToken(request);
 		try {
 			URL facebookUrl = new URL(
-					"https://graph.facebook.com/josue.delDF/feed?access_token="
+					"https://graph.facebook.com/sapcrmsocialmedia/feed?access_token="
 							+ token.getToken());
 
 			URLConnection conn = facebookUrl.openConnection();
